@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Interactive Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* This applies styles to the whole page */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+        /* This styles the main container that holds everything */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Styling for the header section */
+        header {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px; /* Reduced margin */
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #4a4a4a;
+            font-size: 2.5rem;
+        }
+
+        /* --- NEW: Navigation Bar Styling --- */
+        nav {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between nav links */
+        }
+        
+        nav a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        
+        /* This hides pages that are not active */
+        .page {
+            display: none;
+        }
+
+        /* This shows the currently active page */
+        .page.active {
+            display: block;
+        }
+
+        /* Styling for each individual blog post */
+        .post {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .post h2 {
+            margin-top: 0;
+            color: #343a40;
+        }
+
+        .post-meta {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .post-content {
+            line-height: 1.6;
+        }
+        
+        /* --- NEW: Form Styling --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a4a4a;
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box; /* Important for padding and width */
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Styling for buttons */
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Styling for the footer at the bottom of the page */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>My Awesome Blog</h1>
+        </header>
+        
+        <!-- NEW: Navigation Bar -->
+        <nav>
+            <a href="#" id="nav-home" class="active">Home</a>
+            <a href="#" id="nav-create">Create Post</a>
+        </nav>
+
+        <main>
+            <!-- PAGE 1: Home page showing all posts -->
+            <div id="home-page" class="page active">
+                <!-- Blog posts will be dynamically inserted here by JavaScript -->
+            </div>
+            
+            <!-- PAGE 2: Page for viewing a single post -->
+            <div id="post-page" class="page">
+                <!-- A single blog post's full content will be here -->
+            </div>
+
+            <!-- PAGE 3: Page for creating a new post -->
+            <div id="create-page" class="page">
+                <div class="post"> <!-- Re-using post style for the container -->
+                    <h2>Create a New Post</h2>
+                    <form id="create-post-form">
+                        <div class="form-group">
+                            <label for="post-title">Title</label>
+                            <input type="text" id="post-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="post-content">Content</label>
+                            <textarea id="post-content" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Publish Post</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 My Awesome Blog. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <!-- ====================================================== -->
+    <!-- JAVASCRIPT LOGIC STARTS HERE -->
+    <!-- This makes the blog interactive! -->
+    <!-- ====================================================== -->
+    <script>
+        // --- DATA ---
+        // In a real app, this would come from a database. For now, we'll store posts in an array.
+        const posts = [
+            {
+                id: 1,
+                title: "My First Day Learning to Code",
+                author: "Sarah",
+                date: "September 15, 2025",
+                content: "Today was so exciting! I started learning HTML, CSS, and now JavaScript with my parent. HTML is like the skeleton of a website, and CSS is like the clothes. JavaScript is like the brain that makes it do things! We built this very blog design together. It was challenging but super fun to see my code come to life on the screen! I can't wait to learn what's next."
+            },
+            {
+                id: 2,
+                title: "Baking Cookies Was a Success!",
+                author: "Sarah",
+                date: "September 14, 2025",
+                content: "This weekend, I decided to bake chocolate chip cookies. I followed a recipe I found online. The kitchen got a little messy, but the cookies turned out delicious and chewy. There's nothing better than a warm cookie right out of the oven. Maybe my next post will be the recipe! The secret ingredient was a little bit of cinnamon."
+            }
+        ];
+
+        // --- DOM ELEMENTS ---
+        // Getting references to the HTML elements we need to work with.
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('nav a');
+        const homePage = document.getElementById('home-page');
+        const postPage = document.getElementById('post-page');
+        const createForm = document.getElementById('create-post-form');
+
+        // --- FUNCTIONS ---
+
+        /**
+         * Hides all pages and shows the one with the specified ID.
+         * @param {string} pageId The id of the page to show.
+         */
+        function showPage(pageId) {
+            // Hide all pages
+            pages.forEach(page => page.classList.remove('active'));
+            // Show the target page
+            document.getElementById(pageId).classList.add('active');
+
+            // Update active state in navigation
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.getElementById(`nav-${pageId.split('-')[0]}`).classList.add('active');
+        }
+
+        /**
+         * Renders all the blog posts onto the home page.
+         */
+        function renderHomePage() {
+            // Clear the current content of the home page
+            homePage.innerHTML = '';
+            
+            // Loop through each post and create HTML for it
+            posts.forEach(post => {
+                const postElement = document.createElement('article');
+                postElement.className = 'post';
+                
+                // Create a shorter preview for the content
+                const preview = post.content.substring(0, 150) + '...';
+
+                postElement.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <p class="post-meta">Published on ${post.date} by ${post.author}</p>
+                    <div class="post-content">
+                        <p>${preview}</p>
+                        <a href="#" class="btn read-more-btn" data-post-id="${post.id}">Read More</a>
+                    </div>
+                `;
+                homePage.appendChild(postElement);
+            });
+        }
+        
+        /**
+         * Renders a single post's full content on the post page.
+         * @param {number} postId The ID of the post to display.
+         */
+        function renderPostPage(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (!post) return; // If post not found, do nothing.
+
+            postPage.innerHTML = `
+                <article class="post">
+                    <h2>${post.title}</h2>
+                    <p class="post-meta">Published on ${post.date} by ${post.author}</p>
+                    <div class="post-content">
+                        <!-- Replace newlines with <br> tags for proper display -->
+                        <p>${post.content.replace(/\n/g, '<br>')}</p> 
+                        <a href="#" class="btn" id="back-to-home-btn">← Back to Home</a>
+                    </div>
+                </article>
+            `;
+            showPage('post-page');
+        }
+
+        // --- EVENT LISTENERS ---
+
+        // Navigation link clicks
+        document.getElementById('nav-home').addEventListener('click', (e) => {
+            e.preventDefault(); // Prevents the link from reloading the page
+            renderHomePage(); // Re-render in case new posts were added
+            showPage('home-page');
+        });
+
+        document.getElementById('nav-create').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('create-page');
+        });
+
+        // Handle clicks on "Read More" and "Back to Home"
+        document.addEventListener('click', (e) => {
+            // Check if a "Read More" button was clicked
+            if (e.target.classList.contains('read-more-btn')) {
+                e.preventDefault();
+                const postId = parseInt(e.target.dataset.postId);
+                renderPostPage(postId);
+            }
+            // Check if the "Back to Home" button was clicked
+            if (e.target.id === 'back-to-home-btn') {
+                e.preventDefault();
+                renderHomePage();
+                showPage('home-page');
+            }
+        });
+        
+        // Handle the form submission for creating a new post
+        createForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent the form from submitting the traditional way
+
+            const titleInput = document.getElementById('post-title');
+            const contentInput = document.getElementById('post-content');
+
+            // Create a new post object
+            const newPost = {
+                id: Date.now(), // Use a timestamp for a unique ID
+                title: titleInput.value,
+                author: "Sarah", // Hardcoded for now
+                date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                content: contentInput.value
+            };
+            
+            // Add the new post to the beginning of our array
+            posts.unshift(newPost);
+            
+            // Clear the form fields
+            titleInput.value = '';
+            contentInput.value = '';
+            
+            // Go back to the home page to see the new post
+            renderHomePage();
+            showPage('home-page');
+        });
+
+
+        // --- INITIALIZATION ---
+        // This runs when the page first loads
+        renderHomePage();
+
+    </script>
+</body>
+</html>
+
